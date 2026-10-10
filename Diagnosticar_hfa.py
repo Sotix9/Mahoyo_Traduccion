@@ -2,7 +2,7 @@ import os
 from MahoyoService import MahoyoHelper
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-archivo_hfa = os.path.join(BASE_DIR, "WHN_Copy", "data00000.hfa")
+archivo_hfa = os.path.join(BASE_DIR, "WHN_Copy", "NOMBRE_ARCHIVO_HFA.hfa")
 
 if __name__ == "__main__":
     # 1. Diagnóstico sobre la lista de entradas HFA
