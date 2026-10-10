@@ -5,7 +5,7 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Rutas del contenedor y de la carpeta de destino
 archivo_hfa = os.path.join(BASE_DIR, "extracted", "NOMBRE_ARCHIVO_CTD.ctd")
-carpeta_salida_scripts = os.path.join(BASE_DIR, "extracted_scripts")
+carpeta_salida_scripts = os.path.join(BASE_DIR, "extracted_ctd")
 
 if __name__ == "__main__":
     print(f"[*] Inspeccionando contenedor: {archivo_hfa}")
