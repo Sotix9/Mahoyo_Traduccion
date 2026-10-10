@@ -1,6 +1,8 @@
 import os
 from MahoyoService import MahoyoHelper
 
+# Script para extraer todos los archivos .ctd a /extracted.ctd
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Rutas del contenedor y de la carpeta de destino
