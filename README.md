@@ -3,7 +3,7 @@
 Herramientas de automatización y procesamiento en Python para la extracción, gestión y futura reinyección de diálogos de la VN "Witch on the Holy Night" (Mahoyo).
 
 ## Estructura del Proyecto
-Al ejecutar los scripts por primera vez, el sistema autogestionará y creará localmente las siguientes carpetas de trabajo:
+Al ejecutar por primera vez el script `01_Listar_Contenido_hfa.py`, el sistema autogestionará y creará localmente las siguientes carpetas de trabajo:
 - `reports/` -> Reportes y listados del contenido de los contenedores `.hfa`.
 - `extracted/` -> Recursos generales extraídos.
 - `extracted_cbg/` -> Imágenes convertidas o procesadas.
@@ -20,9 +20,9 @@ Al ejecutar los scripts por primera vez, el sistema autogestionará y creará lo
    - Herramienta de soporte para el desempaquetado y empaquetado avanzado de scripts. Descárgala desde su repositorio oficial: [MahoyoHDRepack en GitHub](https://github.com/nike4613/MahoyoHDRepack).
 
 3. **Dependencias de Python:**
-   Instala las librerías necesarias ejecutando en tu terminal:
+   En estas primeras instancias del proyecto, las librearías externas recomendadas son:
    ```bash
-   pip install -r requirements.txt
+   pip install numpy Pillow cffi imagequant
 
 ## Uso
 1. Clona este repositorio o descárgalo en ZIP.
