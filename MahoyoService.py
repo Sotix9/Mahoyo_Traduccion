@@ -7,7 +7,7 @@ from typing import List, Any, Optional, Dict, Optional, Union
 
 # Configurar path a /tools/
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-TOOLS_DIR = os.path.join(BASE_DIR, "tools")
+TOOLS_DIR = os.path.join(BASE_DIR, "mahoyo_tools")
 if TOOLS_DIR not in sys.path:
     sys.path.insert(0, TOOLS_DIR)
 
