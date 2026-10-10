@@ -3,8 +3,8 @@ from MahoyoService import MahoyoHelper
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-carpeta_ctd = os.path.join(BASE_DIR, "extracted_scripts")
-carpeta_txt = os.path.join(BASE_DIR, "extracted_scripts_txt")
+carpeta_ctd = os.path.join(BASE_DIR, "extracted_ctd")
+carpeta_txt = os.path.join(BASE_DIR, "extracted_txt")
 
 if __name__ == "__main__":
     if os.path.exists(carpeta_ctd):
