@@ -3,7 +3,7 @@ from MahoyoService import MahoyoHelper
 
 def inicializar_entorno():
     """Crea automáticamente la estructura de carpetas local si no existe."""
-    directorios = ["WHN_Copy", "tools", "MahoyoHDRepack", "reports", "extracted", "extracted_cbg", "extracted_ctd", "extracted_txt", "translated"]
+    directorios = ["WHN_Copy", "reports", "extracted", "extracted_cbg", "extracted_ctd", "extracted_txt", "translated"]
     for directorio in directorios:
         os.makedirs(directorio, exist_ok=True)
     print("[+] Entorno de carpetas verificado y preparado.")
