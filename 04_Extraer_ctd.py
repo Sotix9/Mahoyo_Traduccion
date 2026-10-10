@@ -4,7 +4,7 @@ from MahoyoService import MahoyoHelper
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 # Rutas del contenedor y de la carpeta de destino
-archivo_hfa = os.path.join(BASE_DIR, "extracted", "script_text_en.ctd")
+archivo_hfa = os.path.join(BASE_DIR, "extracted", "NOMBRE_ARCHIVO_CTD.ctd")
 carpeta_salida_scripts = os.path.join(BASE_DIR, "extracted_scripts")
 
 if __name__ == "__main__":
