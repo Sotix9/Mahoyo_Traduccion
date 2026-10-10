@@ -1,4 +1,4 @@
-# Proyecto Académico de traducción
+# Proyecto Académico de Traducción
 
 Herramientas de automatización y procesamiento en Python para la extracción, gestión y futura reinyección de diálogos de la VN "Witch on the Holy Night" (Mahoyo).
 
