@@ -70,7 +70,7 @@ def clean_and_extract_to_json(input_file, output_json):
 
 if __name__ == "__main__":
 
-    INPUT_FILE = os.path.join(BASE_DIR, "extracted_scripts_txt", "script_text_en.ctd.txt")
+    INPUT_FILE = os.path.join(BASE_DIR, "extracted_txt", "NOMBRE_ARCHIVO_CTD_CONVERTIDO.ctd.txt")
     OUTPUT_FILE = "dialogues_es.json"
 
     clean_and_extract_to_json(INPUT_FILE, OUTPUT_FILE)
