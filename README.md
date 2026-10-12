@@ -11,7 +11,6 @@ El proyecto se encuentra organizado bajo una arquitectura modular clara para sep
   - `graphics_processor.py` -> Manejo y conversión de recursos gráficos (integrando `PS-HuneX_Tools` para `.mzp`, tiles y `.cbg`).
   - `hfa_reader.py` -> Lector y gestor de contenedores `.hfa`.
 - `src/utils/` -> Utilidades de soporte y scripts de laboratorio/diagnóstico (`scripts_prueba/`).
-- `ps-hunex_tools/` -> Repositorio externo integrado para el soporte de archivos con firma `mrgd00` (`.mzp`).
 - `extracted/` & `reports/` -> Directorios autogestionados para salidas de dumps, imágenes PNG e informes de diagnóstico.
 
 ## Requisitos y Dependencias Externas
