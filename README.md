@@ -63,13 +63,13 @@ python cli.py extract -input ruta/al/archivo.hfa
 ### 3. Conversión `.cbg` a `.png`
 Convierte un único archivo `.cbg`, guardándolo por defecto en `extracted/png/`:
 ```bash
-python cli.py extract -input ruta/al/archivo.cbg
+python cli.py cbg2png -input ruta/al/archivo.cbg
 ```
 
 ### 4. Conversión total `.cbg` a `.png`
 Convierte todos los archivos `.cbg`, guardándolos por defecto en `extracted/png/`:
 ```bash
-python cli.py extract -input ruta/carpeta/cbg/
+python cli.py allcbg2png -input ruta/carpeta/cbg/
 ```
 
 ### 5. Descompresión de Scripts (`.ctd`)
