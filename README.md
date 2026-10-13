@@ -77,9 +77,9 @@ Descomprime un archivo `.ctd` mediante `lenzu` y genera el binario limpio en `ex
 ```bash
 python cli.py decompress-ctd ruta/al/archivo.ctd
 ```
-Si añades la bandera `--json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`:
+Si añades la bandera `-json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`:
 ```bash
-python cli.py decompress-ctd ruta/al/archivo.ctd --json
+python cli.py decompress-ctd ruta/al/archivo.ctd -json
 ```
 
 ---
