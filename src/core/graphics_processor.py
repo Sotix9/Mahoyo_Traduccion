@@ -59,39 +59,3 @@ class GraphicsProcessor:
 
         print(f"[+] Conversión masiva finalizada. {exitosos}/{len(archivos_cbg)} imágenes convertidas en: {carpeta_salida}")
         return exitosos
-
-    @classmethod
-    def convertir_directorio_cbg(cls, carpeta_entrada: str, carpeta_salida: Optional[str] = None) -> int:
-        """
-        Escanea una carpeta en busca de archivos .cbg y los convierte todos a .png en un solo intento.
-        """
-        if not carpeta_salida:
-            carpeta_salida = os.path.join(carpeta_entrada, "extracted_png")
-
-        if not os.path.exists(carpeta_entrada):
-            print(f"[-] La carpeta de entrada no existe: {carpeta_entrada}")
-            return 0
-
-        os.makedirs(carpeta_salida, exist_ok=True)
-        archivos_cbg = [f for f in os.listdir(carpeta_entrada) if f.lower().endswith('.cbg')]
-        
-        if not archivos_cbg:
-            print(f"[*] No se encontraron archivos .cbg en: {carpeta_entrada}")
-            return 0
-
-        print(f"[*] Se encontraron {len(archivos_cbg)} archivos .cbg. Iniciando conversión masiva...")
-        exitosos = 0
-
-        for archivo in archivos_cbg:
-            ruta_cbg = os.path.join(carpeta_entrada, archivo)
-            nombre_png = os.path.splitext(archivo)[0] + ".png"
-            ruta_png = os.path.join(carpeta_salida, nombre_png)
-
-            if cls.convertir_cbg_a_png(ruta_cbg, ruta_png):
-                exitosos += 1
-
-        print(f"[+] Conversión masiva finalizada. {exitosos}/{len(archivos_cbg)} imágenes convertidas en: {carpeta_salida}")
-        return exitosos
-        except Exception as e:
-            print(f"[-] Error procesando el archivo MZP {ruta_mzp}: {e}")
-            return False
