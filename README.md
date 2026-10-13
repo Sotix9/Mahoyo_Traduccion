@@ -75,11 +75,11 @@ python cli.py allcbg2png -input ruta/carpeta/cbg/
 ### 5. Descompresión de Scripts (`.ctd`)
 Descomprime un archivo `.ctd` mediante `lenzu` y genera el binario limpio en `extracted/bin_ctd/`:
 ```bash
-python cli.py decompress-ctd ruta/al/archivo.ctd
+python cli.py decompress-ctd -input ruta/al/archivo.ctd
 ```
 Si añades la bandera `-json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`:
 ```bash
-python cli.py decompress-ctd ruta/al/archivo.ctd -json
+python cli.py decompress-ctd -input ruta/al/archivo.ctd -json
 ```
 
 ---
