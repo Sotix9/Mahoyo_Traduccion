@@ -10,11 +10,9 @@ El proyecto está organizado bajo una arquitectura modular estricta para separar
 01_proyecto_traduccion/
 │
 ├── cli.py                  # Punto de entrada principal por consola (CLI)
-├── extracted/              # Salidas autogestionadas (bin_ctd/, json/, etc.)
 ├── mahoyo_tools/           # Módulo base integrado para lenzu y contenedores HFA
 ├── parsers/                # Parsers de scripts y extracción de texto
 │   └── MahoyoScriptParserJSON.py
-├── reports/                # Informes de diagnóstico e índices de archivos
 ├── WHN_Copy/               # Copia local / datos de juego de trabajo
 │
 ├── src/                    # Lógica interna y núcleos de procesamiento
@@ -25,13 +23,11 @@ El proyecto está organizado bajo una arquitectura modular estricta para separar
 │   │
 │   └── legacy/             # Scripts históricos, pruebas y laboratorios de prueba
 │       └── scripts_tests/
-│
-└── ps-hunex_tools/         # Herramienta externa para contenedores mrgd00 (.mzp)
 ```
 
 ---
 
-## 🛠️ Requisitos y Dependencias
+## Requisitos y Dependencias
 
 ### 1. Dependencias de Python
 Instala las librerías necesarias con el siguiente comando:
@@ -42,47 +38,53 @@ pip install numpy Pillow cffi imagequant
 ### 2. Repositorios y Herramientas Integradas
 * **mahoyo_tools:** Módulo de Python base para la interacción con descompresión LenZu y contenedores HFA.
   * [mahoyo_tools en GitHub](https://github.com/loicfrance/mahoyo_tools.git)
-* **PS-HuneX_Tools:** Soporte para contenedores gráficos con firma `mrgd00` (`.mzp`) y descompresión MZX0.
-  * [PS-HuneX_Tools en GitHub](https://github.com/Hintay/PS-HuneX_Tools.git)
-* **MahoyoHDRepack:** Referencia externa en C# / .NET para exportación/importación de diálogos.
-  * [MahoyoHDRepack en GitHub](https://github.com/nike4613/MahoyoHDRepack.git)
-
 ---
 
-## 🚀 Uso de la Línea de Comandos (CLI)
+## Uso de la Línea de Comandos (CLI)
 
 La interfaz central se gestiona a través de `cli.py`. Para ver las opciones globales:
 ```bash
 python cli.py --help
+python cli.py <comando> --help
 ```
 
-### 1. Descompresión de Scripts (`.ctd`)
+### 1. Generar reportes de archivos (`.hfa`)
+Genera una lista de todo el contenido de un `.hfa`, indicando cantidad total de archivos y resumen por extensión, guardándolo por defecto en `reports/reporte_hfa.txt/`:
+```bash
+python cli.py list -input ruta/al/archivo.hfa
+```
+
+### 2. Extraer archivo (`.hfa`)
+Extrae el contenido de un `.hfa` tanto total o de forma selectiva indicando la extensión deseada, guardándolos por defecto en `extracted/(extension-archivo)/`:
+```bash
+python cli.py extract -input ruta/al/archivo.hfa
+```
+
+### 3. Conversión `.cbg` a `.png`
+Convierte un único archivo `.cbg`, guardándolo por defecto en `extracted/png/`:
+```bash
+python cli.py extract -input ruta/al/archivo.cbg
+```
+
+### 4. Conversión total `.cbg` a `.png`
+Convierte todos los archivos `.cbg`, guardándolos por defecto en `extracted/png/`:
+```bash
+python cli.py extract -input ruta/carpeta/cbg/
+```
+
+### 5. Descompresión de Scripts (`.ctd`)
 Descomprime un archivo `.ctd` mediante `lenzu` y genera el binario limpio en `extracted/bin_ctd/`:
 ```bash
 python cli.py decompress-ctd ruta/al/archivo.ctd
 ```
-
-#### Extraer binario y generar JSON en un solo paso:
 Si añades la bandera `--json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`:
 ```bash
 python cli.py decompress-ctd ruta/al/archivo.ctd --json
 ```
 
-### 2. Parseo Independiente a JSON
-Si ya cuentas con un binario descomprimido en `extracted/bin_ctd/` y deseas extraer sus textos a JSON sin volver a ejecutar LenZu:
-```bash
-python cli.py parse-json ruta/al/archivo_descomprimido.bin
-```
-
-### 3. Diagnóstico e Inspección
-Realiza un análisis de metadatos o inspección de *magic bytes* para contenedores o streams binarios:
-```bash
-python cli.py diagnose ruta/al/archivo.hfa
-```
-
 ---
 
-## 🧩 Módulos Principales
+## Módulos Principales
 
 * **`text_processor.py`:** Encapsula la descompresión con `lenzu_decompress` y coordina el flujo de extracción hacia la capa de parsing.
 * **`MahoyoScriptParserJSON.py`:** Aplica filtros estrictos por expresiones regulares para desechar bytecode, comandos del motor y cadenas basura, generando una estructura JSON limpia con `id`, `original` y `traduccion`.
