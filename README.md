@@ -88,7 +88,7 @@ python cli.py decompress-ctd -input ruta/al/archivo.ctd -json
 
 ## Módulos Principales
 
-* **`text_processor.py`:** Encapsula la descompresión con `descompresion_ctd_lenzu` y coordina el flujo de extracción hacia la capa de parsing.
+* **`text_processor.py`:** Encapsula la descompresión con `lenzu_decompress` y coordina el flujo de extracción hacia la capa de parsing.
 * **`MahoyoScriptParserJSON.py`:** Aplica filtros estrictos por expresiones regulares para desechar bytecode, comandos del motor y cadenas basura, generando una estructura JSON limpia con `id`, `original` y `traduccion`.
 * **`hfa_reader.py`:** Maneja la lectura de archivos `.hfa`, generación de reportes por extensión, extracción organizada e inspección profunda de objetos y cabeceras binarias.
 * **`graphics_processor.py`:** Gestor de procesamiento técnico de texturas e imágenes.
