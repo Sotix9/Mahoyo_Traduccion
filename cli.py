@@ -29,17 +29,21 @@ def main():
     parser_extract.add_argument("-output", default="extracted", help="Carpeta base de destino.")
     parser_extract.add_argument("-ext", default=None, help="Filtrar por extensión específica (ej: .ctd, .cbg, .mzp, .ccti, .chs, .hw).")
 
-    # Comando 3: Convertir un CBG a PNG
-    parser_cbg = subparsers.add_parser("cbg2png", help="Convierte un archivo gráfico .cbg individual a formato PNG.")
-    parser_cbg.add_argument("-input", required=True, help="Ruta al archivo .cbg de entrada.")
-    parser_cbg.add_argument("-output", default=None, help="Ruta de salida para la imagen PNG (opcional).")
+    # Comando 3: Conversión CBG a PNG por lotes con límite y reubicación
+    parser_allcbg2png = subparsers.add_parser("allcbg2png", help="Convierte archivos .cbg a .png de forma masiva con control de lotes y reubicación")
+    parser_allcbg2png.add_argument("-input", required=True, help="Carpeta de entrada que contiene los archivos .cbg")
+    parser_allcbg2png.add_argument("-output", required=False, help="Carpeta de salida opcional para los PNGs")
+    parser_allcbg2png.add_argument("-processed", required=False, help="Carpeta opcional para mover los CBG procesados")
+    parser_allcbg2png.add_argument("-limit", type=int, required=False, help="Cantidad máxima de archivos a procesar en este lote")
 
-    # Comando 4: Conversión de todos los CBG a PNG
-    parser_all_cbg = subparsers.add_parser("allcbg2png", help="Convierte masivamente todos los archivos .cbg de una carpeta a PNG.")
-    parser_all_cbg.add_argument("-input", required=True, help="Carpeta que contiene los archivos .cbg.")
-    parser_all_cbg.add_argument("-output", default=None,  help="Carpeta de salida para las imágenes PNG (opcional).")
-
-    # Comando para descomprimir CTD
+    # Comando 4: Conversión MZP a PNG por lotes con límite y reubicación
+    parser_allmzp2png = subparsers.add_parser("allmzp2png", help="Convierte archivos .mzp a .png de forma masiva y los reubica")
+    parser_allmzp2png.add_argument("-input", required=True, help="Carpeta de entrada que contiene los archivos .mzp")
+    parser_allmzp2png.add_argument("-output", required=False, help="Carpeta de salida opcional para los PNGs")
+    parser_allmzp2png.add_argument("-processed", required=False, help="Carpeta opcional para mover los MZP procesados")
+    parser_allmzp2png.add_argument("-limit", type=int, required=False, help="Cantidad máxima de archivos a procesar en este lote")
+    
+    # Comando 5: Descompresión CTD
     parser_ctd = subparsers.add_parser("decompress-ctd", help="Descomprime un archivo .ctd usando LenZu")
     parser_ctd.add_argument("-input", help="Ruta al archivo .ctd de entrada")
     parser_ctd.add_argument("-bin_dir", default="extracted/bin_ctd", help="Carpeta de salida para el binario")
@@ -56,13 +60,21 @@ def main():
         print(f"[*] Extrayendo recursos de: {args.hfa} (Filtro: {args.ext or 'Todos'})")
         HfaReader.extraer_recursos(args.hfa, carpeta_destino_base=args.output, filtrar_extension=args.ext)
 
-    elif args.command == "cbg2png":
-        print(f"[*] Convirtiendo CBG: {args.input}")
-        GraphicsProcessor.convertir_cbg_a_png(args.input, args.output)
-
     elif args.command == "allcbg2png":
-        print(f"[*] Ejecutando conversión masiva en directorio: {args.input}")
-        GraphicsProcessor.convertir_directorio_cbg(carpeta_entrada=args.input, carpeta_salida=args.output)
+        GraphicsProcessor.convertir_directorio_cbg_con_limite(
+            carpeta_entrada=args.input,
+            carpeta_salida=args.output,
+            carpeta_procesados=args.processed,
+            limite=args.limit
+        )
+
+    elif args.command == "allmzp2png":
+        GraphicsProcessor.convertir_directorio_mzp_con_limite(
+            carpeta_entrada=args.input,
+            carpeta_salida=args.output,
+            carpeta_procesados=args.processed,
+            limite=args.limit
+        )
 
     elif args.command == "decompress-ctd":
         LenzuDecompressor.descompresion_ctd_lenzu(
