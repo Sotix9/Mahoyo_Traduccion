@@ -9,13 +9,13 @@ El proyecto está organizado bajo una arquitectura modular estricta para separar
 ```text
 01_proyecto_traduccion/
 │
-├── cli.py                  # Punto de entrada principal por consola (CLI)
-├── mahoyo_tools/           # Módulo base integrado para lenzu y contenedores HFA
-├── parsers/                # Parsers de scripts y extracción de texto
+├── cli.py                        # Punto de entrada principal por consola (CLI)
+├── mahoyo_tools/                 # Módulo base integrado para lenzu y contenedores HFA
+├── parsers/                      # Parsers de scripts y extracción de texto
 │   └── MahoyoScriptParserJSON.py
-├── WHN_Copy/               # Copia local / datos de juego de trabajo
+├── WHN_Copy/                     # Copia local / datos de juego de trabajo
 │
-├── src/                    # Lógica interna y núcleos de procesamiento
+├── src/                          # Lógica interna y núcleos de procesamiento
 │   ├── core/
 │   │   ├── graphics_processor.py  # Conversión gráfica (MZP, MZX0, CBG, tiles)
 │   │   ├── hfa_reader.py          # Gestión, extracción y diagnóstico de archivos HFA
