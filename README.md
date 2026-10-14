@@ -49,7 +49,7 @@ python cli.py <comando> --help
 ```
 
 ### 1. Generar reportes de archivos (`.hfa`)
-Genera una lista de todo el contenido de un `.hfa`, indicando cantidad total de archivos y resumen por extensión, guardándolo por defecto en `reports/reporte_hfa.txt/`:
+Genera una lista de todo el contenido de un `.hfa`, indicando cantidad total de archivos y resumen por extensión, guardándolo por defecto en `reports/reporte_hfa.txt`:
 ```bash
 python cli.py list -input ruta/al/archivo.hfa
 ```
@@ -61,15 +61,17 @@ python cli.py extract -input ruta/al/archivo.hfa
 ```
 
 ### 3. Conversión `.cbg` a `.png`
-Convierte un único archivo `.cbg`, guardándolo por defecto en `extracted/png/`:
+Convierte todos o una cantidad especificada de archivos `.cbg`, guardándolos por defecto en `extracted/cbg/cbg_png/`.
+Para una próxima extracción limpia, los archivos procesados se moverán por defecto a `extracted/cbg/extracted_cbg/`.
 ```bash
-python cli.py cbg2png -input ruta/al/archivo.cbg
+python cli.py allcbg2png -input ruta/carpeta/cbg -limite cantidad-a-procesar
 ```
 
-### 4. Conversión total `.cbg` a `.png`
-Convierte todos los archivos `.cbg`, guardándolos por defecto en `extracted/png/`:
+### 4. Conversión `.mzp` a `.png`
+Convierte todos o una cantidad especificada de archivos `.cbg`, guardándolos por defecto en `extracted/mzp/mzp_png/`.
+Para una próxima extracción limpia, los archivos procesados se moverán por defecto a `extracted/mzp/extracted_mzp/`.
 ```bash
-python cli.py allcbg2png -input ruta/carpeta/cbg/
+python cli.py allmzp2png -input ruta/carpeta/mzp -limite cantidad-a-procesar
 ```
 
 ### 5. Descompresión de Scripts (`.ctd`)
