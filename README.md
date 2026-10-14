@@ -36,7 +36,7 @@ pip install numpy Pillow cffi imagequant
 ```
 
 ### 2. Repositorios y Herramientas Integradas
-* **mahoyo_tools:** Módulo de Python base para la interacción con descompresión LenZu y contenedores HFA.
+* **mahoyo_tools:** Módulo de Python base para la interacción con descompresión de contenedores HFA, scripts `lenzu.py` y `mzp.py` para descompresión de archivos `.ctd` y `.mzp`.
   * [mahoyo_tools en GitHub](https://github.com/loicfrance/mahoyo_tools.git)
 ---
 
