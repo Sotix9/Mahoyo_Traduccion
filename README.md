@@ -75,7 +75,7 @@ python cli.py allmzp2png -i ruta/carpeta/mzp -lim cantidad-a-procesar
 ```
 
 ### 5. Comando: lenzu
-Descomprime o comprime un archivo `.ctd` mediante `lenzu` con las banderas: `-decompress` o `-compress` y genera el binario limpio en `extracted/bin_ctd/`:
+Descomprime o comprime un archivo `.ctd` mediante `lenzu` con las banderas: `-decompress` o `-compress`, generando el binario limpio en `extracted/bin_ctd/`:
 ```bash
 python cli.py lenzu [-decompress/-compress] -i ruta/al/archivo.ctd
 ```
