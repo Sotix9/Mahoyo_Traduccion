@@ -79,16 +79,18 @@ def main():
         HfaReader.extraer_recursos(args.input, carpeta_destino_base=args.output, filtrar_extension=args.ext)
 
     elif args.command == "allcbg2png":
-        GraphicsProcessor.convertir_directorio_cbg_con_limite(
-            carpeta_entrada=args.input,
+        GraphicsProcessor.procesar_recurso_grafico(
+            entrada=args.input,
+            extension=".cbg",
             carpeta_salida=args.output,
             carpeta_procesados=args.archive,
             limite=args.lim
         )
 
     elif args.command == "allmzp2png":
-        GraphicsProcessor.convertir_directorio_mzp_con_limite(
-            carpeta_entrada=args.mzp,
+        GraphicsProcessor.procesar_recurso_grafico(
+            entrada=args.input,
+            extension=".mzp",
             carpeta_salida=args.output,
             carpeta_procesados=args.archive,
             limite=args.lim
