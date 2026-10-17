@@ -57,9 +57,9 @@ def main():
     parser_lenzu.add_argument("-json", action="store_true", help="[Solo descompresión] Generar automáticamente el JSON de traducción.")
 
     # Comando 6: Parseo independiente a JSON
-    parser_jsonparser = subparsers.add_parser("jsonparse", help="Parsea un archivo .bin descompreso a un archivo JSON estructurado.")
-    parser_jsonparser.add_argument("-i", "-input", required=True, help="Ruta al archivo .bin de entrada.")
-    parser_jsonparser.add_argument("-o", "-output", default=None, help="Ruta o carpeta de salida opcional para el JSON (por defecto: extracted/json/)")
+    parser_jsonparse = subparsers.add_parser("jsonparse", help="Parsea un archivo .bin descompreso a un archivo JSON estructurado.")
+    parser_jsonparse.add_argument("-i", "-input", required=True, help="Ruta al archivo .bin de entrada.")
+    parser_jsonparse.add_argument("-o", "-output", default=None, help="Ruta o carpeta de salida opcional para el JSON (por defecto: extracted/json/)")
 
     # Comando 7: Reinyección de archivos modificados al HFA
     parser_inject = subparsers.add_parser("inject", help="Reinyecta un archivo modificado (ej: .ctd traducido) dentro de un contenedor HFA.")
