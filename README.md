@@ -75,7 +75,7 @@ python cli.py allmzp2png -i [ruta/carpeta/mzp | ruta/al/archivo.mzp] -lim cantid
 ```
 
 ### 5. Comando: lenzu
-Descomprime o comprime un archivo `.ctd` mediante `lenzu` con las banderas: `-decompress` o `-compress`, generando el binario limpio en `extracted/bin_ctd/`
+Descomprime o comprime un archivo `.ctd` mediante `lenzu` con las banderas: `-decompress` o `-compress`, generando el binario limpio en `extracted/bin_ctd/`.
 Si añades la bandera `-json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`. Esta opción solo funciona al descomprimir el archivo:
 ```bash
 python cli.py lenzu [-decompress | -compress] -i ruta/al/archivo.ctd -json
