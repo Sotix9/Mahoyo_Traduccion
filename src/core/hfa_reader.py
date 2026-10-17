@@ -14,10 +14,8 @@ class HfaReader:
         if not os.path.exists(ruta_hfa):
             raise FileNotFoundError(f"No se encontró el archivo HFA: {ruta_hfa}")
 
-        archive = hfa.HfaArchive(ruta_hfa)
-        if hasattr(archive, 'open'):
-            archive.open()
-        return list(archive)
+        with hfa.HfaArchive(ruta_hfa) as archive:
+            return list(archive)
 
     @classmethod
     def generar_reporte(cls, ruta_hfa: str, ruta_reporte_txt: str) -> None:
@@ -103,15 +101,19 @@ class HfaReader:
         print(f"[+] Se extrajeron {contador} archivos correctamente en carpetas organizadas bajo: {carpeta_destino_base}")
         return contador
 
+    def reinyectar_archivo_hfa(ruta_hfa: str, nombre_entrada_ctd: str, ruta_nuevo_ctd: str):
+        """Abre el contenedor HFA en modo lectura/escritura ('rw') e inyecta el script traducido."""
+        with hfa.HfaArchive(ruta_hfa, mode='rw') as archive:
+            if nombre_entrada_ctd in archive:
+                # El método inject demahoyo_tools se encarga de empaquetarlo en el contenedor
+                archive[nombre_entrada_ctd].inject(ruta_nuevo_ctd)
+                print(f"[+] Script {nombre_entrada_ctd} reinyectado correctamente en {ruta_hfa}")
+            else:
+                print(f"[-] No se encontró la entrada {nombre_entrada_ctd} en el archivo HFA.")
+                
 
-
-############################## DIAGNÓSTICO #######################################
-
-# No implementado en 'cli.py' aún, pero su función es inspeccionar las funciones o atributos de una librería
-# para aplicar a un objeto específico. Por ejemplo, una solución a dicho problema en el intento de conversión de un CBG a PNG:
-# "Atributos disponibles en cbg: ['Any', 'BitStreamReader', 'BitStreamWriter', 'BufferedWriter', 
-#            'ByteHuffmanTable', 'BytesIO', 'BytesRW', 'BytesReader', 'BytesWriter', 'CBG_MAGIC', 'CompressedBG', 
-#            'Image', 'TYPE_CHECKING', 'cast', 'ceil', 'np', 'overload', 'read_variable', 'struct', 'write_variable']"
+    
+####################################### DIAGNÓSTICO #######################################
 
 
     @classmethod
@@ -191,3 +193,38 @@ class HfaReader:
         print(f"[*] Representación ASCII: {header}")
         print("------------------------------------------\n")
         return header
+
+'''
+Bloque no implemmentado en 'cli.py' aún, pero su función es inspeccionar las funciones o atributos de una librería
+para aplicar a un objeto específico. 
+
+Por ejemplo, una solución a dicho problema en el intento de conversión de un CBG a PNG:
+Resultado: "Atributos disponibles en cbg: ['Any', 'BitStreamReader', 'BitStreamWriter', 'BufferedWriter', 
+            'ByteHuffmanTable', 'BytesIO', 'BytesRW', 'BytesReader', 'BytesWriter', 'CBG_MAGIC', 'CompressedBG', <- siendo este el que se necesitaba
+            'Image', 'TYPE_CHECKING', 'cast', 'ceil', 'np', 'overload', 'read_variable', 'struct', 'write_variable']"
+
+Parámetros del header de los archivos `.ctd`:
+
+[*] Archivos .ctd a procesar: 4
+
+Firma detectada: LenZuCompressor
+Parámetro A (Hex): 31000000
+Parámetro B (Hex): 30000000
+Tamaño del bloque comprimido: 771770 bytes
+
+Firma detectada: LenZuCompressor
+Parámetro A (Hex): 31000000
+Parámetro B (Hex): 30000000
+Tamaño del bloque comprimido: 895856 bytes
+
+Firma detectada: LenZuCompressor
+Parámetro A (Hex): 31000000
+Parámetro B (Hex): 30000000
+Tamaño del bloque comprimido: 806301 bytes
+
+Firma detectada: LenZuCompressor
+Parámetro A (Hex): 31000000
+Parámetro B (Hex): 30000000
+Tamaño del bloque comprimido: 810340 bytes
+
+'''
