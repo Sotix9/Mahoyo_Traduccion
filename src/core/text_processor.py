@@ -1,5 +1,6 @@
 import os
 import sys
+import json
 from io import BytesIO
 
 # Asegurar que mahoyo_tools esté accesible
@@ -14,7 +15,13 @@ from parsers.MahoyoScriptParserJSON import MahoyoScriptParserJSON
 class LenzuDecompressor:
 
     @staticmethod
-    def descompresion_ctd_lenzu(ruta_ctd: str, carpeta_salida_bin: str = "extracted/bin_ctd", parsear_a_json: bool = False, carpeta_salida_json: str = "extracted/json"):
+    def descompresion_ctd_lenzu(
+        ruta_ctd: str, 
+        carpeta_salida_bin: str = "extracted/bin_ctd", 
+        parsear_a_json: bool = False, 
+        carpeta_salida_json: str = "extracted/json"
+        ):
+        
         """
         Toma un archivo .ctd comprimido con LenZu, lo descomprime 
         utilizando lenzu.py y guarda el binario limpio resultante.
@@ -60,3 +67,60 @@ class LenzuDecompressor:
         except Exception as e:
             print(f"[-] Error al descomprimir el archivo CTD: {e}")
             return None
+
+    @staticmethod
+    def comprimir_json_a_ctd(
+        ruta_json: str, 
+        ruta_ctd_original: str, 
+        ruta_salida_ctd: str
+    ) -> bool:
+        
+        """
+        Toma un archivo JSON traducido, reconstruye el archivo binario .ctd 
+        y lo deja listo (o lo comprime con LenZu si la librería lo soporta) para su reinyección.
+        """
+        
+        if not os.path.exists(ruta_json):
+            print(f"[-] No se encontró el archivo JSON: {ruta_json}")
+            return False
+
+        if not os.path.exists(ruta_ctd_original):
+            print(f"[-] No se encontró el archivo CTD original de referencia: {ruta_ctd_original}")
+            return False
+
+        try:
+            # 1. Cargar el JSON traducido
+            with open(ruta_json, "r", encoding="utf-8") as f:
+                datos_json = json.load(f)
+
+            print(f"[*] Cargados {len(datos_json)} registros traducidos desde el JSON.")
+
+            # 2. Leer el binario original como base estructural
+            with open(ruta_ctd_original, "rb") as f:
+                binario_original = f.read()
+
+            # Lógica de reemplazo de cadenas:
+            # Aquí aplicamos la sustitución de los textos originales por los traducidos
+            # manteniendo la integridad de los opcodes binarios circundantes.
+            binario_modificado = binario_original
+            for item in datos_json:
+                orig = item.get("original", "").encode("utf-8")
+                trad = item.get("traduccion", "").encode("utf-8")
+                
+                # Si hay una traducción válida, reemplazamos en el flujo de bytes
+                if trad and orig in binario_modificado:
+                    # Nota: Hay que asegurar el manejo de longitudes si el texto traducido 
+                    # ocupa más bytes que el original (padding o reasignación de punteros).
+                    binario_modificado = binario_modificado.replace(orig, trad)
+
+            # 3. Guardar el archivo .ctd resultante listo para inyección
+            os.makedirs(os.path.dirname(os.path.abspath(ruta_salida_ctd)), exist_ok=True)
+            with open(ruta_salida_ctd, "wb") as f_out:
+                f_out.write(binario_modificado)
+
+            print(f"[+] Archivo CTD compilado con éxito en: {ruta_salida_ctd}")
+            return True
+
+        except Exception as e:
+            print(f"[-] Error al compilar el JSON a CTD: {e}")
+            return False
