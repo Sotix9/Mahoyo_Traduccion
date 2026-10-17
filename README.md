@@ -7,7 +7,7 @@ Herramientas de automatización y procesamiento en Python para la extracción, g
 El proyecto está organizado bajo una arquitectura modular estricta para separar las responsabilidades de la interfaz de usuario, los parsers de formato y los motores de procesamiento central:
 
 ```text
-01_proyecto_traduccion/
+01_mahoyo_traduccion/
 │
 ├── cli.py                         # Punto de entrada principal por consola (CLI)
 ├── mahoyo_tools/                  # Módulo base integrado para lenzu y contenedores HFA
