@@ -9,13 +9,15 @@ class HfaReader:
     """Clase especializada en la lectura y extracción de contenedores HFA."""
 
     @staticmethod
-    def obtener_entradas(ruta_hfa: str) -> List[Any]:
-        """Abre un contenedor HFA y devuelve la lista de entradas de forma segura."""
+    def obtener_entradas(ruta_hfa: str) -> List[str]:
+        """Abre un contenedor HFA y devuelve la lista de nombres de archivos disponibles."""
         if not os.path.exists(ruta_hfa):
             raise FileNotFoundError(f"No se encontró el archivo HFA: {ruta_hfa}")
 
         with hfa.HfaArchive(ruta_hfa) as archive:
-            return list(archive)
+            # Dependiendo de la estructura de mahoyo_tools, archive.keys() o iterar
+            # nos da los identificadores/nombres de las entradas internas.
+            return [str(entry) for entry in archive.keys()] if hasattr(archive, 'keys') else [str(e) for e in archive]
 
     @classmethod
     def generar_reporte(cls, ruta_hfa: str, ruta_reporte_txt: str) -> None:
@@ -60,46 +62,53 @@ class HfaReader:
 
         return "archivo_extraido.bin"
 
-    @classmethod
-    def extraer_recursos(cls, ruta_hfa: str, carpeta_destino_base: str = "extracted", filtrar_extension: Optional[str] = None) -> int:
-        """
-        Extrae recursos de un HFA organizándolos automáticamente en subcarpetas según su extensión.
-        """
-        entradas = cls.obtener_entradas(ruta_hfa)
-        contador = 0
+    @staticmethod
+    def extraer_recursos(ruta_hfa: str, carpeta_destino_base: str = "extracted", filtrar_extension: str | None = None):
+        """Extrae los recursos del HFA organizándolos por su extensión de forma limpia."""
+        if not os.path.exists(ruta_hfa):
+            raise FileNotFoundError(f"No se encontró el archivo HFA: {ruta_hfa}")
 
-        for entry in entradas:
-            nombre_archivo = cls.obtener_nombre_limpio(entry)
-            ext = os.path.splitext(nombre_archivo)[1].lower()
+        os.makedirs(carpeta_destino_base, exist_ok=True)
+        contador_exitos = 0
 
-            # Si se especificó un filtro y no coincide, saltar
-            if filtrar_extension and ext != filtrar_extension.lower():
-                continue
+        print(f"[*] Iniciando extracción desde: {ruta_hfa}...")
 
-            # Determinar subcarpeta dinámica según la extensión (ej: .ctd -> extracted/ctd/)
-            nombre_carpeta_ext = ext.replace(".", "") if ext else "sin_extension"
-            carpeta_destino_final = os.path.join(carpeta_destino_base, nombre_carpeta_ext)
-            os.makedirs(carpeta_destino_final, exist_ok=True)
+        with hfa.HfaArchive(ruta_hfa) as archive:
+            # Si 'archive' funciona como diccionario, podemos iterar sobre sus claves (.keys()) 
+            # o extraer el nombre directamente de la propiedad del objeto entrada.
+            for entrada in archive:
+                # Obtenemos el nombre en formato string de forma segura 
+                # (probando con el atributo .name o convirtiéndolo a texto si es necesario)
+                nombre_entrada = getattr(entrada, 'name', str(entrada))
 
-            ruta_final = os.path.join(carpeta_destino_final, nombre_archivo)
-
-            try:
-                if hasattr(entry, 'extract'):
-                    entry.extract(ruta_final)
-                elif hasattr(entry, 'read'):
-                    data = entry.read()
-                    with open(ruta_final, 'wb') as f_out:
-                        f_out.write(data)
-                else:
-                    print(f"[-] Advertencia: La entrada {nombre_archivo} no expone métodos de extracción.")
+                # Filtrar por extensión si se especificó una
+                if filtrar_extension and not nombre_entrada.lower().endswith(filtrar_extension.lower()):
                     continue
-                
-                contador += 1
-            except Exception as e:
-                print(f"[-] Error al extraer {nombre_archivo}: {e}")
 
-        print(f"[+] Se extrajeron {contador} archivos correctamente en carpetas organizadas bajo: {carpeta_destino_base}")
-        return contador
+                # Determinar carpeta de salida según la extensión del archivo interno
+                ext = os.path.splitext(nombre_entrada)[1].lstrip('.') or 'bin'
+                carpeta_destino = os.path.join(carpeta_destino_base, ext)
+                os.makedirs(carpeta_destino, exist_ok=True)
+
+                ruta_salida_archivo = os.path.join(carpeta_destino, os.path.basename(nombre_entrada))
+
+                try:
+                    # En lugar de usar 'entrada' directamente si es un objeto de metadatos, 
+                    # accedemos al recurso mediante la clave de texto original si la librería lo requiere,
+                    # o usamos el método extract del propio objeto si lo soporta.
+                    recurso = archive[nombre_entrada] if not hasattr(entrada, 'extract') else entrada
+                    
+                    if hasattr(recurso, 'extract'):
+                        recurso.extract(ruta_salida_archivo)
+                    else:
+                        with open(ruta_salida_archivo, "wb") as f_out:
+                            f_out.write(recurso.read())
+                            
+                    contador_exitos += 1
+                except Exception as e:
+                    print(f"[-] Error al extraer la entrada '{nombre_entrada}': {e}")
+
+        print(f"[+] ¡Extracción completada con éxito! Total de archivos extraídos: {contador_exitos}")
 
     def reinyectar_archivo_hfa(ruta_hfa: str, nombre_entrada_ctd: str, ruta_nuevo_ctd: str):
         """Abre el contenedor HFA en modo lectura/escritura ('rw') e inyecta el script traducido."""
