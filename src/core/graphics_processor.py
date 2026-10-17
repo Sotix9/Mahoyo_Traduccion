@@ -55,7 +55,7 @@ class GraphicsProcessor:
         if not extension.startswith('.'):
             extension = f".{extension}"
 
-        # CASO A: El usuario pasó la ruta de un archivo específico
+        # CASO A: procesar archivo expecífico
         if os.path.isfile(entrada):
             if not entrada.lower().endswith(extension):
                 print(f"[-] El archivo especificado no coincide con la extensión esperada ({extension}): {entrada}")
@@ -100,7 +100,7 @@ class GraphicsProcessor:
                 return 1
             return 0
 
-        # CASO B: El usuario pasó una carpeta (Procesamiento por lotes)
+        # CASO B: procesar directorio (todos los archivos o por lotes)
         if not os.path.exists(entrada):
             print(f"[-] La ruta de entrada no existe: {entrada}")
             return 0
