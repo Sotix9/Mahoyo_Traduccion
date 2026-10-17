@@ -42,7 +42,7 @@ pip install numpy Pillow cffi imagequant
 
 ## Uso de la Línea de Comandos (CLI)
 
-La interfaz central se gestiona a través de `cli.py`. Para ver las opciones globales y detalles de sintáxis:
+La interfaz central se gestiona a través de `cli.py`. Para ver las opciones globales y detalles de sintaxis:
 ```bash
 python cli.py --help
 python cli.py <comando> --help
