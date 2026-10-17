@@ -38,7 +38,7 @@ def main():
     parser_allcbg2png.add_argument("-lim", type=int, required=False, help="Cantidad máxima de archivos a procesar en este lote")
 
     # Comando 4: Conversión MZP a PNG por lotes con límite y reubicación
-    parser_allmzp2png = subparsers.add_parser("allmzp2png", help="Convierte archivos .mzp a .png de forma masiva y los reubica")
+    parser_allmzp2png = subparsers.add_parser("allmzp2png", help="Convierte archivos .mzp a .png de forma masiva con control de lotes y reubicación")
     parser_allmzp2png.add_argument("-i", "--input", required=True, help="Carpeta de entrada que contiene los archivos .mzp")
     parser_allmzp2png.add_argument("-o", "--output", required=False, help="Carpeta de salida opcional para los PNGs")
     parser_allmzp2png.add_argument("-a", "--archive", required=False, help="Carpeta opcional para mover los MZP procesados")
