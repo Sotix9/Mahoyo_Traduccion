@@ -48,6 +48,7 @@ python cli.py --help
 python cli.py <comando> --help
 ```
 
+## Comandos
 ### 1. list
 Genera una lista/reporte de todo el contenido de un `.hfa`, indicando cantidad total de archivos y resumen por extensión, guardándolo por defecto en `reports/reporte_hfa.txt`:
 ```bash
