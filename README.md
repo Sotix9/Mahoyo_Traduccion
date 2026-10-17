@@ -64,20 +64,20 @@ python cli.py extract -i ruta/al/archivo.hfa
 Convierte todos o una cantidad especificada de archivos `.cbg`, guardándolos por defecto en `extracted/cbg/cbg_png/`.
 Los archivos procesados se moverán por defecto a `extracted/cbg/extracted_cbg/`, para que en la próxima extracción no se vuelvan a tomar en cuenta.
 ```bash
-python cli.py allcbg2png -i ruta/carpeta/cbg -lim cantidad-a-procesar
+python cli.py allcbg2png -i [ruta/carpeta/cbg | ruta/al/archivo.cbg] -lim cantidad-a-procesar
 ```
 
 ### 4. Comando: allmzp2png
 Convierte todos o una cantidad especificada de archivos `.mzp`, guardándolos por defecto en `extracted/mzp/mzp_png/`.
 Los archivos procesados se moverán por defecto a `extracted/mzp/extracted_mzp/`, para que en la próxima extracción no se vuelvan a tomar en cuenta.
 ```bash
-python cli.py allmzp2png -i ruta/carpeta/mzp -lim cantidad-a-procesar
+python cli.py allmzp2png -i [ruta/carpeta/mzp | ruta/al/archivo.mzp] -lim cantidad-a-procesar
 ```
 
 ### 5. Comando: lenzu
 Descomprime o comprime un archivo `.ctd` mediante `lenzu` con las banderas: `-decompress` o `-compress`, generando el binario limpio en `extracted/bin_ctd/`:
 ```bash
-python cli.py lenzu [-decompress/-compress] -i ruta/al/archivo.ctd
+python cli.py lenzu [-decompress | -compress] -i ruta/al/archivo.ctd
 ```
 Si añades la bandera `-json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`. Esta opción solo funciona al descomprimir el archivo:
 ```bash
@@ -93,7 +93,7 @@ python cli.py jsonparse -i ruta/al/archivo.bin
 ### 7. Comando: inject
 Reinyección del archivo `.bin` o `.ctd` modificado y comprimido dentro del archivo `.hfa` de origen:
 ```bash
-python cli.py inject -hfa ruta/al/archivo.hfa -t nombre-archivo-a-modificar -f ruta/al/archivo_modificado[.bin/.ctd]
+python cli.py inject -hfa ruta/al/archivo.hfa -t nombre-archivo-a-modificar -f ruta/al/archivo_modificado[.bin | .ctd]
 ```
 
 
