@@ -22,7 +22,7 @@ El proyecto está organizado bajo una arquitectura modular estricta para separar
 │   │   └── text_processor.py      # Orquestador de descompresión LenZu y parseo
 │   │
 │   └── legacy/                    # Scripts históricos, pruebas y laboratorios de prueba
-│       └── scripts_tests/
+│       └── scripts_tests/         (no incluido)
 ```
 
 ---
@@ -42,7 +42,7 @@ pip install numpy Pillow cffi imagequant
 
 ## Uso de la Línea de Comandos (CLI)
 
-La interfaz central se gestiona a través de `cli.py`. Para ver las opciones globales:
+La interfaz central se gestiona a través de `cli.py`. Para ver las opciones globales y detalles de sintáxis:
 ```bash
 python cli.py --help
 python cli.py <comando> --help
@@ -51,38 +51,51 @@ python cli.py <comando> --help
 ### 1. Generar reportes de archivos (`.hfa`)
 Genera una lista de todo el contenido de un `.hfa`, indicando cantidad total de archivos y resumen por extensión, guardándolo por defecto en `reports/reporte_hfa.txt`:
 ```bash
-python cli.py list -input ruta/al/archivo.hfa
+python cli.py list -i ruta/al/archivo.hfa
 ```
 
 ### 2. Extraer archivo (`.hfa`)
 Extrae el contenido de un `.hfa` tanto total o de forma selectiva indicando la extensión deseada, guardándolos por defecto en `extracted/(extension-archivo)/`:
 ```bash
-python cli.py extract -input ruta/al/archivo.hfa
+python cli.py extract -i ruta/al/archivo.hfa
 ```
 
 ### 3. Conversión `.cbg` a `.png`
 Convierte todos o una cantidad especificada de archivos `.cbg`, guardándolos por defecto en `extracted/cbg/cbg_png/`.
 Los archivos procesados se moverán por defecto a `extracted/cbg/extracted_cbg/`, para que en la próxima extracción no se vuelvan a tomar en cuenta.
 ```bash
-python cli.py allcbg2png -input ruta/carpeta/cbg -limite cantidad-a-procesar
+python cli.py allcbg2png -i ruta/carpeta/cbg -lim cantidad-a-procesar
 ```
 
 ### 4. Conversión `.mzp` a `.png`
 Convierte todos o una cantidad especificada de archivos `.mzp`, guardándolos por defecto en `extracted/mzp/mzp_png/`.
 Los archivos procesados se moverán por defecto a `extracted/mzp/extracted_mzp/`, para que en la próxima extracción no se vuelvan a tomar en cuenta.
 ```bash
-python cli.py allmzp2png -input ruta/carpeta/mzp -limite cantidad-a-procesar
+python cli.py allmzp2png -i ruta/carpeta/mzp -lim cantidad-a-procesar
 ```
 
-### 5. Descompresión de Scripts (`.ctd`)
-Descomprime un archivo `.ctd` mediante `lenzu` y genera el binario limpio en `extracted/bin_ctd/`:
+### 5. Descompresión/Compresión de Scripts (`.ctd`)
+Descomprime o comprime un archivo `.ctd` mediante `lenzu` con las banderas: `-decompress` o `-compress` y genera el binario limpio en `extracted/bin_ctd/`:
 ```bash
-python cli.py decompress-ctd -input ruta/al/archivo.ctd
+python cli.py lenzu [-decompress/-compress] -i ruta/al/archivo.ctd
 ```
-Si añades la bandera `-json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`:
+Si añades la bandera `-json`, se procesará el binario de forma encadenada usando `MahoyoScriptParserJSON`, generando un archivo estructurado listo para traducción en `extracted/json/`. Esta opción solo funciona al descomprimir el archivo:
 ```bash
-python cli.py decompress-ctd -input ruta/al/archivo.ctd -json
+python cli.py lenzu -decompress -i ruta/al/archivo.ctd -json
 ```
+
+### 6. Parseo a JSON
+Convierte un archivo `.bin` extraído de un `.ctd` a JSON, guardándolo por defecto en `extracted/json/`. Desobliga la utilización de la bandera `-json` del comando `lenzu`:
+```bash
+python cli.py jsonparse -i ruta/al/archivo.bin
+```
+
+### 7. Reinyección de archivos
+Reinyección del archivo `.bin` o `.ctd` modificado y comprimido dentro del archivo `.hfa` de origen:
+```bash
+python cli.py inject -hfa ruta/al/archivo.hfa -t nombre-archivo-a-modificar -f ruta/al/archivo_modificado[.bin/.ctd]
+```
+
 
 ---
 
