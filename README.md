@@ -61,14 +61,14 @@ python cli.py extract -i ruta/al/archivo.hfa
 ```
 
 ### 3. Comando: allcbg2png
-Convierte todos o una cantidad especificada de archivos `.cbg`, guardándolos por defecto en `extracted/cbg/cbg_png/`.
+Convierte uno, varios o todos los archivos `.cbg` de un directorio, guardándolos por defecto en `extracted/cbg/cbg_png/`.
 Los archivos procesados se moverán por defecto a `extracted/cbg/extracted_cbg/`, para que en la próxima extracción no se vuelvan a tomar en cuenta.
 ```bash
 python cli.py allcbg2png -i [ruta/carpeta/cbg | ruta/al/archivo.cbg] -lim cantidad-a-procesar
 ```
 
 ### 4. Comando: allmzp2png
-Convierte todos o una cantidad especificada de archivos `.mzp`, guardándolos por defecto en `extracted/mzp/mzp_png/`.
+Convierte uno, varios o todos los archivos `.mzp` de un directorio, guardándolos por defecto en `extracted/mzp/mzp_png/`.
 Los archivos procesados se moverán por defecto a `extracted/mzp/extracted_mzp/`, para que en la próxima extracción no se vuelvan a tomar en cuenta.
 ```bash
 python cli.py allmzp2png -i [ruta/carpeta/mzp | ruta/al/archivo.mzp] -lim cantidad-a-procesar
