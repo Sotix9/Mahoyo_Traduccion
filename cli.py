@@ -11,6 +11,7 @@ import argparse
 from core.hfa_reader import HfaReader
 from core.graphics_processor import GraphicsProcessor
 from core.text_processor import LenzuDecompressor
+from parsers.MahoyoScriptParserJSON import MahoyoScriptParserJSON
 
 def main():
     parser = argparse.ArgumentParser(
@@ -31,24 +32,41 @@ def main():
 
     # Comando 3: Conversión CBG a PNG por lotes con límite y reubicación
     parser_allcbg2png = subparsers.add_parser("allcbg2png", help="Convierte archivos .cbg a .png de forma masiva con control de lotes y reubicación")
-    parser_allcbg2png.add_argument("-input", required=True, help="Carpeta de entrada que contiene los archivos .cbg")
+    parser_allcbg2png.add_argument("-cbg", required=True, help="Carpeta de entrada que contiene los archivos .cbg")
     parser_allcbg2png.add_argument("-output", required=False, help="Carpeta de salida opcional para los PNGs")
     parser_allcbg2png.add_argument("-processed", required=False, help="Carpeta opcional para mover los CBG procesados")
     parser_allcbg2png.add_argument("-limit", type=int, required=False, help="Cantidad máxima de archivos a procesar en este lote")
 
     # Comando 4: Conversión MZP a PNG por lotes con límite y reubicación
     parser_allmzp2png = subparsers.add_parser("allmzp2png", help="Convierte archivos .mzp a .png de forma masiva y los reubica")
-    parser_allmzp2png.add_argument("-input", required=True, help="Carpeta de entrada que contiene los archivos .mzp")
+    parser_allmzp2png.add_argument("-mzp", required=True, help="Carpeta de entrada que contiene los archivos .mzp")
     parser_allmzp2png.add_argument("-output", required=False, help="Carpeta de salida opcional para los PNGs")
     parser_allmzp2png.add_argument("-processed", required=False, help="Carpeta opcional para mover los MZP procesados")
     parser_allmzp2png.add_argument("-limit", type=int, required=False, help="Cantidad máxima de archivos a procesar en este lote")
     
-    # Comando 5: Descompresión CTD
-    parser_ctd = subparsers.add_parser("decompress-ctd", help="Descomprime un archivo .ctd usando LenZu")
-    parser_ctd.add_argument("-input", help="Ruta al archivo .ctd de entrada")
-    parser_ctd.add_argument("-bin_dir", default="extracted/bin_ctd", help="Carpeta de salida para el binario")
-    parser_ctd.add_argument("-json", action="store_true", help="Generar automáticamente el JSON de traducción")
-    parser_ctd.add_argument("-json_dir", default="extracted/json", help="Carpeta de salida para el JSON")
+    # Comando 5: Procesamiento LenZu (Descompresión / Compresión)
+    parser_lenzu = subparsers.add_parser("lenzu", help="Ejecuta operaciones con el algoritmo LenZu (descomprimir o comprimir archivos .ctd/.bin).")
+    # Grupo mutuamente exclusivo o banderas de acción
+    grupo_accion = parser_lenzu.add_mutually_exclusive_required = True
+    parser_lenzu.add_argument("-decompress", action="store_true", help="Descomprime un archivo .ctd usando LenZu.")
+    parser_lenzu.add_argument("-compress", action="store_true", help="Comprime un archivo binario modificado de vuelta a formato LenZu.")
+    # Argumentos de entrada y salida
+    parser_lenzu.add_argument("-ctd", required=True, help="Ruta al archivo de entrada (.ctd para descomprimir o .bin para comprimir).")
+    parser_lenzu.add_argument("-output", default=None, help="Carpeta o ruta de salida opcional.")
+    # Bandera auxiliar específica para el flujo de descompresión con JSON
+    parser_lenzu.add_argument("-json", action="store_true", help="[Solo descompresión] Generar automáticamente el JSON de traducción.")
+
+    # Comando 6: Parseo independiente a JSON
+    parser_parse = subparsers.add_parser("parse-json", help="Parsea un archivo .bin descompreso a un archivo JSON estructurado.")
+    parser_parse.add_argument("-bin", required=True, help="Ruta al archivo .bin de entrada.")
+    parser_parse.add_argument("-output", default=None, help="Ruta o carpeta de salida opcional para el JSON (por defecto: extracted/json/)")
+
+    # Comando 7: Reinyección de archivos modificados al HFA
+    parser_inject = subparsers.add_parser("inject", help="Reinyecta un archivo modificado (ej: .ctd traducido) dentro de un contenedor HFA.")
+    parser_inject.add_argument("-hfa", required=True, help="Ruta al archivo .hfa del juego donde se aplicará el cambio.")
+    parser_inject.add_argument("-entry", required=True, help="Nombre o ruta interna de la entrada dentro del HFA (ej: script.ctd).")
+    parser_inject.add_argument("-input", required=True, help="Ruta al archivo binario/.ctd modificado listo para inyectar.")
+
 
     args = parser.parse_args()
 
@@ -62,7 +80,7 @@ def main():
 
     elif args.command == "allcbg2png":
         GraphicsProcessor.convertir_directorio_cbg_con_limite(
-            carpeta_entrada=args.input,
+            carpeta_entrada=args.cbg,
             carpeta_salida=args.output,
             carpeta_procesados=args.processed,
             limite=args.limit
@@ -70,18 +88,49 @@ def main():
 
     elif args.command == "allmzp2png":
         GraphicsProcessor.convertir_directorio_mzp_con_limite(
-            carpeta_entrada=args.input,
+            carpeta_entrada=args.mzp,
             carpeta_salida=args.output,
             carpeta_procesados=args.processed,
             limite=args.limit
         )
 
-    elif args.command == "decompress-ctd":
-        LenzuDecompressor.descompresion_ctd_lenzu(
-            ruta_ctd=args.input,
-            carpeta_salida_bin=args.bin_dir,
-            parsear_a_json=args.json,
-            carpeta_salida_json=args.json_dir
+    elif args.command == "lenzu":
+        if args.decompress and args.compress:
+            print("[-] Error: No puedes especificar --decompress y --compress al mismo tiempo.")
+            return
+
+        if args.compress and args.json:
+            print("[-] Advertencia/Error: La bandera -json no es aplicable durante la compresión. El JSON se usa para traducir antes de compilar.")
+            return
+
+        if args.decompress:
+            print(f"[*] Ejecutando descompresión LenZu en: {args.input}")
+            LenzuDecompressor.descompresion_ctd_lenzu(
+                ruta_ctd=args.input,
+                carpeta_salida_bin=args.output or "extracted/bin_ctd",
+                parsear_a_json=args.json,
+                carpeta_salida_json="extracted/json"
+            )
+            
+        elif args.compress:
+            print(f"[*] Ejecutando compresión para reinyección en: {args.input}")
+            # Lógica de compresión futura...
+
+    elif args.command == "parse-json":
+        try:
+            print(f"[*] Iniciando parseo estructurado del binario: {args.bin}")
+            parser = MahoyoScriptParserJSON(args.bin)
+            ruta_resultado = parser.extraer_textos_filtrados(args.output)
+            print(f"[+] ¡Proceso finalizado con éxito! JSON guardado en: {ruta_resultado}")
+        except Exception as e:
+            print(f"[-] Error al parsear el binario a JSON: {e}")
+
+    elif args.command == "inject":
+        print(f"[*] Preparando reinyección para la entrada '{args.entry}' en: {args.hfa}")
+        HfaReader.reinyectar_archivo_hfa(
+            ruta_hfa=args.hfa,
+            nombre_entrada_objetivo=args.entry,
+            ruta_nuevo_archivo=args.input
         )
 
     else:
